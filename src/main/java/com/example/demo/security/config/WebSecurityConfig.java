@@ -1,6 +1,6 @@
 package com.example.demo.security.config;
 
-import com.example.demo.appuser.AppUserService;
+import com.example.demo.service.AppUserService;
 import com.example.demo.security.jwt.JwtRequestFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/login")
+                .antMatchers("/api/v1/login", "/api/locaux/**", "/api/session/**") // Allow public access to these endpoints
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000") // Allow only localhost:3000
+                .allowedOrigins("http://localhost:3001", "http://localhost:3000") // Allow only localhost:3000
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow specific methods
                 .allowedHeaders("*") // Allow any headers
                 .allowCredentials(true); // Allow credentials (cookies, authorization headers)

@@ -1,5 +1,8 @@
-package com.example.demo.appuser;
+package com.example.demo.controller;
 
+import com.example.demo.repository.AppUserRepository;
+import com.example.demo.service.AppUserService;
+import com.example.demo.model.AppUser;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,14 +28,16 @@ public class AppUserController {
      */
     @GetMapping("/profile")
     public ResponseEntity<AppUser> getProfile() {
-        // Get the currently authenticated user's email
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
-        // Fetch the user's details
         Optional<AppUser> appUserOptional = appUserRepository.findByEmail(email);
-        return appUserOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
+        return appUserOptional.map(appUser -> {
+            AppUser filteredUser = new AppUser();
+            filteredUser.setEmail(appUser.getEmail());
+            filteredUser.setAppUserRole(appUser.getAppUserRole());
+            return ResponseEntity.ok(filteredUser);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
 }

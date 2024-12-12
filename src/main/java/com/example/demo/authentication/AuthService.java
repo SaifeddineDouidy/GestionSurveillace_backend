@@ -1,7 +1,7 @@
 package com.example.demo.authentication;
 
-import com.example.demo.appuser.AppUser;
-import com.example.demo.appuser.AppUserRepository;
+import com.example.demo.model.AppUser;
+import com.example.demo.repository.AppUserRepository;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.security.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.example.demo.security;
 
-import com.example.demo.appuser.AppUser;
+import com.example.demo.model.AppUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
@@ -35,8 +35,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !appUser.getLocked();
+        return false;
     }
+
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -45,8 +46,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return appUser.getEnabled();
+        return false;
     }
+
 
 }
 

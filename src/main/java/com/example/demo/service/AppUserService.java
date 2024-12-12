@@ -1,6 +1,7 @@
-package com.example.demo.appuser;
+package com.example.demo.service;
 
 
+import com.example.demo.repository.AppUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
