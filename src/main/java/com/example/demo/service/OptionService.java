@@ -1,0 +1,43 @@
+package com.example.demo.service;
+
+import com.example.demo.model.Local;
+import com.example.demo.repository.OptionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.example.demo.model.Option;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class OptionService {
+    @Autowired
+    private OptionRepository optionRepository;
+
+    public List<Option> getAllOptions() {
+        return optionRepository.findAll();
+    }
+
+    public Option addOptions(Option option) {
+        return optionRepository.save(option);
+    }
+
+    public void deleteOptions(Option option) {
+        optionRepository.delete(option);
+    }
+
+    public void deleteOptionsById(Long id) {
+        optionRepository.deleteById(id);
+    }
+
+    public Option updateOptions(Option option) {
+        return optionRepository.save(option);
+    }
+
+    public List<Option> searchOptions(String query) {
+        return optionRepository.findAll().stream()
+                .filter(local -> local.getNomDeFiliere().toLowerCase().contains(query.toLowerCase())
+                        || String.valueOf(local.getAnnee()).contains(query))
+                .collect(Collectors.toList());
+    }
+}

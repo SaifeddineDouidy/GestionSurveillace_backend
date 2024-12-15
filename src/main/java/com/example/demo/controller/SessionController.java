@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/session")
@@ -43,4 +44,18 @@ public class SessionController {
         sessionService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Updated backend code to accept a JSON object
+    @PutMapping("/{id}/validate")
+    public ResponseEntity<Session> toggleValidation(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
+        boolean isValid = body.get("isValid");  // Extract the value from the request body
+        Session session = sessionService.find(id);
+        if (session == null) {
+            return ResponseEntity.notFound().build();
+        }
+        session.setValid(isValid);
+        sessionService.update(session);
+        return ResponseEntity.ok(session);
+    }
+
 }

@@ -2,10 +2,16 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Local;
 import com.example.demo.service.LocalService;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -51,4 +57,39 @@ public class LocalController {
         List<Local> filteredLocaux = localService.searchLocaux(query);
         return ResponseEntity.ok(filteredLocaux);
     }
+    // Upload an Excel file and save locals from it
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadLocauxFromExcel(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("No file selected.");
+        }
+
+        try (InputStream inputStream = file.getInputStream()) {
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // Skip the header row (if it exists)
+            for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                Row row = sheet.getRow(i);
+
+                if (row != null) {
+                    String name = row.getCell(0).getStringCellValue();
+                    int size = (int) row.getCell(1).getNumericCellValue();
+                    String type = row.getCell(2).getStringCellValue();
+
+                    // Create and save the new Local object
+                    Local newLocal = new Local(name, size, type);
+                    localService.addLocal(newLocal); // Save to the database
+                }
+            }
+
+            workbook.close();
+            return ResponseEntity.ok("File uploaded successfully and locals saved.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to process the file.");
+        }
+    }
+
 }

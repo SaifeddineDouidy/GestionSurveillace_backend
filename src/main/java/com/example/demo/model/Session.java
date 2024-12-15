@@ -1,9 +1,21 @@
 package com.example.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "sessions")
 public class Session {
@@ -14,51 +26,46 @@ public class Session {
 
     private String type;
 
+    @Setter
+    @Column(name = "isValid", nullable = false)
+    private boolean isValid = false;
+
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    public Session() {}
+    @Column(name = "morning_start1", nullable = false)
 
-    public Session(String type, LocalDate startDate, LocalDate endDate) {
-        this.type = type;
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+    private String morningStart1;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "morning_end1", nullable = false)
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String morningEnd1;
 
-    public String getType() {
-        return type;
-    }
+    @Column(name = "morning_start2", nullable = false)
 
-    public void setType(String type) {
-        this.type = type;
-    }
+    private String morningStart2;
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
+    @Column(name = "morning_end2", nullable = false)
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
+    private String morningEnd2;
 
-    public LocalDate getEndDate() {
-        return endDate;
-    }
+    @Column(name = "afternoon_start1", nullable = false)
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
+    private String afternoonStart1;
+
+    @Column(name = "afternoon_end1", nullable = false)
+
+    private String afternoonEnd1;
+
+    @Column(name = "afternoon_start2", nullable = false)
+
+    private String afternoonStart2;
+
+    @Column(name = "afternoon_end2", nullable = false)
+
+    private String afternoonEnd2;
 }
 
