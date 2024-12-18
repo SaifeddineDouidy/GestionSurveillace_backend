@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .authorizeRequests()
                 .antMatchers("/api/v1/login", "/api/locaux/**", "/api/session/**","/api/options/**",
                         "/api/modules/**","/api/departements/**","/api/enseignants/**", "/swagger-ui/**",
-                        "/swagger-ui.html", "/v3/api-docs/**", "/api/options/**") // Allow public access to these endpoints
+                        "/swagger-ui.html", "/v3/api-docs/**", "/api/options/**", "/api/exams/**") // Allow public access to these endpoints
                 .permitAll()
                 .anyRequest()
                 .authenticated()
