@@ -73,11 +73,28 @@ public class ModuleController {
     @PutMapping("/{id}")
     public ResponseEntity<Module> updateModule(
             @PathVariable Long id,
-            @RequestBody Module updatedModule) {
-        updatedModule.setId(id); // Ensure the ID matches the one being updated
-        Module savedModule = moduleService.updateModule(updatedModule);
+            @RequestBody ModuleDTO moduleDTO) {
+
+        // Fetch the existing module from the database
+        Module existingModule = moduleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Module not found with ID: " + id));
+
+        // Update the module name
+        existingModule.setNomModule(moduleDTO.getNomModule());
+
+        // Fetch and update the related Option entity if provided
+        if (moduleDTO.getOption() != null) {
+            Option option = optionRepository.findById(moduleDTO.getOption())
+                    .orElseThrow(() -> new ResourceNotFoundException("Option not found with ID: " + moduleDTO.getOption()));
+            existingModule.setOption(option);
+        }
+
+        // Save the updated module
+        Module savedModule = moduleRepository.save(existingModule);
+
         return ResponseEntity.ok(savedModule);
     }
+
 
     // Search for modules
     @GetMapping("/search")
