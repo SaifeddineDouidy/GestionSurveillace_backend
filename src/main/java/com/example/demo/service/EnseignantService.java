@@ -29,4 +29,7 @@ public class EnseignantService {
     public void deleteEnseignant(Long id) {
         enseignantRepository.deleteById(id);
     }
+    public int countEnseignants() {
+        return (int) enseignantRepository.count();
+    }
 }

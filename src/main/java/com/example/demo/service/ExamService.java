@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ExamService {
@@ -16,7 +17,18 @@ public class ExamService {
         return examRepository.save(exam);
     }
 
+    public int countExams() {
+        return (int) examRepository.count(); // Assuming `count()` is defined in `JpaRepository`
+    }
+
     public List<Exam> getAllExams() {
         return examRepository.findAll();
+    }
+    public List<Map<String, Object>> getRecentExams() {
+        // Example query, replace with actual database logic
+        return List.of(
+                Map.of("name", "Math", "score", 90),
+                Map.of("name", "Physics", "score", 85)
+        );
     }
 }

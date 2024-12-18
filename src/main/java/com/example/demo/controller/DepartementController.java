@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Departement;
 import com.example.demo.model.Enseignant;
 import com.example.demo.service.DepartementService;
@@ -63,4 +64,15 @@ public class DepartementController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/{id}/enseignants")
+    public ResponseEntity<List<Enseignant>> getEnseignantsByDepartement(@PathVariable Long id) {
+        try {
+            List<Enseignant> enseignants = departementService.getEnseignantsByDepartement(id);
+            return ResponseEntity.ok(enseignants);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

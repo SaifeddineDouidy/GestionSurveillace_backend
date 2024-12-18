@@ -20,8 +20,10 @@ public class ExamController {
         return ResponseEntity.ok(createdExam);
     }
 
+
     @GetMapping
     public ResponseEntity<List<Exam>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
     }
+
 }
