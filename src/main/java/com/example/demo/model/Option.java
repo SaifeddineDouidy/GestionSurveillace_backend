@@ -28,6 +28,11 @@ public class Option {
     @OneToMany(mappedBy = "option", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Module> modules;
+    @ManyToOne
+    @JoinColumn(name = "departement_id", nullable = false)
+    @JsonBackReference
+    private Departement departement;
+
 
 
 }

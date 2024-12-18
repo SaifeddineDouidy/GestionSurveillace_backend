@@ -1,12 +1,16 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name="departement")
+@Getter
+@Setter
 public class Departement {
 
     @Id
@@ -15,33 +19,14 @@ public class Departement {
 
     @Column(name = "departement_name", nullable = false)
     private String departmentName;
+    @OneToMany(mappedBy = "departement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Option> options;
+
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Enseignant> enseignants;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
-
-    public List<Enseignant> getEnseignants() {
-        return enseignants;
-    }
-
-    public void setEnseignants(List<Enseignant> enseignants) {
-        this.enseignants = enseignants;
-    }
 }

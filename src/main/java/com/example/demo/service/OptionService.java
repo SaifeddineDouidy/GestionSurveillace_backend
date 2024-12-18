@@ -40,4 +40,8 @@ public class OptionService {
                         || String.valueOf(local.getAnnee()).contains(query))
                 .collect(Collectors.toList());
     }
+    public List<Option> getOptionsByDepartment(Long departmentId) {
+        return optionRepository.findByDepartementId(departmentId);
+    }
+
 }

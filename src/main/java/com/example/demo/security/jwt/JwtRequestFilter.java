@@ -52,5 +52,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Proceed with the request
         filterChain.doFilter(request, response);
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/departments") || path.startsWith("/v3/api-docs");
+    }
+
 }
 
