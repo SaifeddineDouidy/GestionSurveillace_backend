@@ -49,16 +49,14 @@ public class DepartementController {
     public ResponseEntity<Departement> updateDepartement(@PathVariable Long id, @RequestBody Departement departementDetails) {
         return departementService.getDepartementById(id).map(departement -> {
             // Update the department name
-            departement.setDepartmentName(departementDetails.getDepartmentName());
-
-            // Clear the existing list and add new ones
-            departement.getEnseignants().clear();
-            departement.getEnseignants().addAll(departementDetails.getEnseignants());
-
-            // Update the parent reference in enseignants
-            for (Enseignant enseignant : departement.getEnseignants()) {
-                enseignant.setDepartment(departement);
+            if (departementDetails.getDepartmentName() != null) {
+                departement.setDepartmentName(departementDetails.getDepartmentName());
             }
+
+                // Update the parent reference in enseignants
+                for (Enseignant enseignant : departement.getEnseignants()) {
+                    enseignant.setDepartment(departement);
+                }
 
             Departement updatedDepartement = departementService.saveDepartement(departement);
             return ResponseEntity.ok(updatedDepartement);

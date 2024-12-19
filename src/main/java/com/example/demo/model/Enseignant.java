@@ -1,9 +1,12 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
+@Data
 @Entity
 public class Enseignant {
 
@@ -25,44 +28,8 @@ public class Enseignant {
     @JsonBackReference
     private Departement department;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "enseignant")
+    private List<Exam> exam;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public boolean isDispense() {
-        return dispense;
-    }
-
-    public void setDispense(boolean dispense) {
-        this.dispense = dispense;
-    }
-
-    public Departement getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Departement department) {
-        this.department = department;
-    }
 }
