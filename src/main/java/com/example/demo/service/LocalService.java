@@ -14,6 +14,11 @@ public class LocalService {
     @Autowired
     private LocalRepository localRepository;
 
+
+    public List<Local> getLocauxByIds(List<Long> ids) {
+        return localRepository.findAllByIdIn(ids);
+    }
+
     public List<Local> getAllLocaux() {
         return localRepository.findAll();
     }
@@ -41,4 +46,8 @@ public class LocalService {
                         || local.getType().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList());
     }
+    public void saveAll(List<Local> locaux) {
+        localRepository.saveAll(locaux);
+    }
+
 }

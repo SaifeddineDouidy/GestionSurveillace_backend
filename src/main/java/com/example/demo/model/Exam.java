@@ -7,11 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 public class Exam {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,4 +40,8 @@ public class Exam {
     @JoinColumn(name = "module_id", nullable = false)
     private Module module;
 
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Local> locaux;
+
+    // Getters and Setters
 }
