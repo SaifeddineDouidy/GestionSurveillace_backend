@@ -66,6 +66,7 @@ public class ExamController {
         exam.setLocaux(locaux);
         for (Local local : locaux) {
             local.setExam(exam);
+            local.setDisponible(false);
         }
 
         Exam savedExam = examService.createExam(exam);
