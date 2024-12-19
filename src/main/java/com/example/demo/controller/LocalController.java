@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Local;
+import com.example.demo.repository.LocalRepository;
 import com.example.demo.service.LocalService;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -90,6 +91,15 @@ public class LocalController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to process the file.");
         }
+    }
+
+    @Autowired
+    private LocalRepository localRepository;
+
+    @PostMapping("/bulk-create")
+    public ResponseEntity<List<Local>> createLocaux(@RequestBody List<Local> locaux) {
+        List<Local> savedLocaux = localRepository.saveAll(locaux);
+        return ResponseEntity.ok(savedLocaux);
     }
 
 }

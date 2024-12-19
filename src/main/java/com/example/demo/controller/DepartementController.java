@@ -33,6 +33,12 @@ public class DepartementController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/bulk-create")
+    public ResponseEntity<List<Departement>> createDepartments(@RequestBody List<Departement> departments) {
+        List<Departement> savedDepartments = departementService.saveAll(departments);
+        return ResponseEntity.ok(savedDepartments);
+    }
+
     @PostMapping
     public Departement createDepartement(@RequestBody Departement departement) {
         return departementService.saveDepartement(departement);

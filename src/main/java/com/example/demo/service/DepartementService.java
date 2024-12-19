@@ -17,6 +17,11 @@ public class DepartementService {
     @Autowired
     private DepartementRepository departementRepository;
 
+
+    public List<Departement> saveAll(List<Departement> departments) {
+        return departementRepository.saveAll(departments);
+    }
+
     public List<Departement> getAllDepartements() {
         return departementRepository.findAll();
     }
