@@ -28,8 +28,5 @@ public class Enseignant {
     @JsonBackReference
     private Departement department;
 
-    @OneToMany(mappedBy = "enseignant")
-    private List<Exam> exam;
-
 
 }
