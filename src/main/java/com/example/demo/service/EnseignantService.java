@@ -29,4 +29,7 @@ public class EnseignantService {
     public void deleteEnseignant(Long id) {
         enseignantRepository.deleteById(id);
     }
+    public List<Enseignant> saveAll(List<Enseignant> enseignants) {
+        return enseignantRepository.saveAll(enseignants);
+    }
 }

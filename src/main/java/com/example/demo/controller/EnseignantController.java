@@ -15,6 +15,13 @@ public class EnseignantController {
     @Autowired
     private EnseignantService enseignantService;
 
+
+    @PostMapping("/bulk-create")
+    public ResponseEntity<List<Enseignant>> createEnseignants(@RequestBody List<Enseignant> enseignants) {
+        List<Enseignant> savedEnseignants = enseignantService.saveAll(enseignants);
+        return ResponseEntity.ok(savedEnseignants);
+    }
+
     @GetMapping
     public List<Enseignant> getAllEnseignants() {
         return enseignantService.getAllEnseignants();
