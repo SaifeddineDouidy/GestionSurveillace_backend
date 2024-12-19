@@ -32,4 +32,7 @@ public class EnseignantService {
     public int countEnseignants() {
         return (int) enseignantRepository.count();
     }
+    public List<Enseignant> saveAll(List<Enseignant> enseignants) {
+        return enseignantRepository.saveAll(enseignants);
+    }
 }
