@@ -1,18 +1,23 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Departement;
 import com.example.demo.model.Local;
 import com.example.demo.repository.OptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.example.demo.model.Option;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class OptionService {
     @Autowired
     private OptionRepository optionRepository;
+
 
     public List<Option> getAllOptions() {
         return optionRepository.findAll();
@@ -43,5 +48,6 @@ public class OptionService {
     public List<Option> getOptionsByDepartment(Long departmentId) {
         return optionRepository.findByDepartementId(departmentId);
     }
+
 
 }
