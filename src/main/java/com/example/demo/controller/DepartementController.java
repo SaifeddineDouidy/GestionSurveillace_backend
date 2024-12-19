@@ -3,7 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Departement;
 import com.example.demo.model.Enseignant;
+import com.example.demo.model.Option;
 import com.example.demo.service.DepartementService;
+import com.example.demo.service.OptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ public class DepartementController {
 
     @Autowired
     private DepartementService departementService;
+    @Autowired
+    private OptionService optionService;
 
     @GetMapping
     public List<Departement> getAllDepartements() {
@@ -79,6 +83,11 @@ public class DepartementController {
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/{id}/options")
+    public ResponseEntity<List<Option>> getOptionsByDepartment(@PathVariable Long id) {
+        List<Option> options = optionService.getOptionsByDepartment(id);
+        return ResponseEntity.ok(options);
     }
 
 }
