@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                         "/api/options/**",
                         "/api/modules/**",
                         "/api/departements/**","/api/enseignants/**",
-                        "/api/dashboard/**","/v3/api-docs/**",
+                        "/api/dashboard/**","/api/exams/**","/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/swagger-resources/**",

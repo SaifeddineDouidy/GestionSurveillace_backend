@@ -83,10 +83,6 @@ public class OptionController {
         List<Option> result = optionService.searchOptions(query);
         return ResponseEntity.ok(result);
     }
-    @GetMapping("/departement/{id}")
-    public ResponseEntity<List<Option>> getOptionsByDepartment(@PathVariable Long id) {
-        List<Option> options = optionService.getOptionsByDepartment(id);
-        return ResponseEntity.ok(options);
-    }
+
 
 }
