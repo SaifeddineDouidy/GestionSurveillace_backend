@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import com.example.demo.repository.LocalRepository;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "locaux")
 public class Local {
@@ -25,7 +28,11 @@ public class Local {
 
     @ManyToOne
     @JoinColumn(name = "exam_id")
+    @JsonBackReference
     private Exam exam;
+
+    private boolean disponible = true;
+
     public Local() {
 
     }
@@ -36,47 +43,4 @@ public class Local {
         this.type = type;
     }
 
-
-
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public int getTaille() {
-        return taille;
-    }
-
-    public void setTaille(int taille) {
-        this.taille = taille;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Exam getExam() {
-        return exam;
-    }
-
-    public void setExam(Exam exam) {
-        this.exam = exam;
-    }
 }

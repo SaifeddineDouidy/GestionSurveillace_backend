@@ -5,6 +5,8 @@ import com.example.demo.repository.ExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -30,5 +32,9 @@ public class ExamService {
                 Map.of("name", "Math", "score", 90),
                 Map.of("name", "Physics", "score", 85)
         );
+    }
+
+    public List<Exam> findExamsByDateAndTime(LocalDate date, LocalTime startTime, LocalTime endTime) {
+        return examRepository.findByDateAndStartTimeAndEndTime(date, startTime, endTime);
     }
 }

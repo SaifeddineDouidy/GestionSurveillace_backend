@@ -39,4 +39,8 @@ public class ModuleService {
                 .filter(local -> local.getNomModule().toLowerCase().contains(query.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
+    public List<Module> getModulesByOption(Long optionId) {
+        return moduleRepository.findByOptionId(optionId);
+    }
 }

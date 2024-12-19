@@ -2,10 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Departement;
 import com.example.demo.model.Local;
+import com.example.demo.model.Module;
 import com.example.demo.model.Option;
 import com.example.demo.service.DepartementService;
+import com.example.demo.service.ModuleService;
 import com.example.demo.service.OptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,8 @@ public class OptionController {
 
     @Autowired
     private OptionService optionService;
+    @Autowired
+    private ModuleService moduleService;
 
     @Autowired
     private DepartementService departementService;
@@ -90,5 +95,10 @@ public class OptionController {
     }
 
 
+    @GetMapping("/{id}/modules")
+    public ResponseEntity<List<Module>> getModulesByOption(@PathVariable Long id) {
+        List<Module> modules = moduleService.getModulesByOption(id);
+        return ResponseEntity.ok(modules);
+    }
 
 }

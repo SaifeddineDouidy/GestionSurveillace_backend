@@ -10,9 +10,12 @@ import com.example.demo.repository.OptionRepository;
 import com.example.demo.service.ExamService;
 import com.example.demo.service.LocalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 @RestController
 @RequestMapping("/api/exams")
@@ -61,9 +64,22 @@ public class ExamController {
         exam.setOption(option);
         exam.setModule(module);
         exam.setLocaux(locaux);
+        for (Local local : locaux) {
+            local.setExam(exam);
+        }
 
         Exam savedExam = examService.createExam(exam);
         return ResponseEntity.ok(savedExam);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Exam>> getExamsByDateAndTime(
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam("endTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime) {
+
+        List<Exam> exams = examService.findExamsByDateAndTime(date, startTime, endTime);
+        return ResponseEntity.ok(exams);
     }
 
 

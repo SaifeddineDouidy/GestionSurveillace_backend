@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/v1/login", "/api/locaux/**", "/api/session/**","/api/options/**",
-                        "/api/modules/**","/api/departements/**","/api/enseignants/**", "/swagger-ui/**",
+                        "/api/modules/**","/api/departements/**","/api/enseignants/**", "/swagger-ui/**","/api/dashboard/**",
                         "/swagger-ui.html", "/v3/api-docs/**", "/api/options/**", "/api/exams/**", "/api/locaux/bulk-create", "/api/enseignants/bulk-create") // Allow public access to these endpoints
                 .permitAll()
                 .anyRequest()
