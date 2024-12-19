@@ -66,8 +66,10 @@ public class ExamController {
         return ResponseEntity.ok(savedExam);
     }
 
+
     @GetMapping
     public ResponseEntity<List<Exam>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
     }
+
 }
