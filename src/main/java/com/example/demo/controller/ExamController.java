@@ -9,6 +9,7 @@ import com.example.demo.repository.ModuleRepository;
 import com.example.demo.repository.OptionRepository;
 import com.example.demo.service.ExamService;
 import com.example.demo.service.LocalService;
+import com.example.demo.service.SurveillanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/exams")
 public class ExamController {
@@ -38,6 +41,8 @@ public class ExamController {
 
     @Autowired
     private LocalService localService;
+    @Autowired
+    private SurveillanceService surveillanceService;
 
     @PostMapping
     public ResponseEntity<Exam> createExam(@RequestBody ExamDTO examDTO) {
@@ -87,6 +92,24 @@ public class ExamController {
     @GetMapping
     public ResponseEntity<List<Exam>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
+    }
+
+
+    @GetMapping("/generate-surveillance")
+    public ResponseEntity<Map<String, Map<String, String>>> generateSurveillanceTable() {
+        Map<String, Map<String, String>> surveillanceTable = surveillanceService.generateSurveillanceTable();
+        return ResponseEntity.ok(surveillanceTable);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Exam> updateExam(@PathVariable Long id, @RequestBody ExamDTO examDTO) {
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteExam(@PathVariable Long id) {
+        examService.deleteExam(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

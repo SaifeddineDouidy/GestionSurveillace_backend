@@ -10,5 +10,6 @@ import java.util.List;
 public interface ExamRepository extends JpaRepository<Exam, Long> {
 
     List<Exam> findByDateAndStartTimeAndEndTime(LocalDate date, LocalTime startTime, LocalTime endTime);
+    List<Exam> findTop5ByOrderByDateDescStartTimeDesc();
 
 }
