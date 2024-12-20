@@ -2,7 +2,6 @@ package com.example.demo.model;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Exam {
 
     @Id
@@ -45,13 +45,11 @@ public class Exam {
     @JsonManagedReference
     private List<Local> locaux;
 
-    @PreRemove
-    private void preRemove() {
+    @ManyToOne
+    @JoinColumn(name = "session_id", nullable = false)
+    private Session session;
 
-        for (Local local : locaux) {
-            local.setExam(null);
-            local.setDisponible(true);
-        }
-    }
 
+
+    // Getters and Setters
 }

@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
-import com.example.demo.service.ExamService;
+
 import com.example.demo.service.EnseignantService;
 import com.example.demo.service.DepartementService;
 

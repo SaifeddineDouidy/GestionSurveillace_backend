@@ -12,8 +12,10 @@ import com.example.demo.service.LocalService;
 import com.example.demo.service.SurveillanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -41,42 +43,15 @@ public class ExamController {
 
     @Autowired
     private LocalService localService;
-    @Autowired
-    private SurveillanceService surveillanceService;
 
     @PostMapping
     public ResponseEntity<Exam> createExam(@RequestBody ExamDTO examDTO) {
-        // Fetch related entities
-        Departement departement = departementRepository.findById(examDTO.getDepartement())
-                .orElseThrow(() -> new RuntimeException("Departement not found"));
-        Enseignant enseignant = enseignantRepository.findById(examDTO.getEnseignant())
-                .orElseThrow(() -> new RuntimeException("Enseignant not found"));
-        Option option = optionRepository.findById(examDTO.getOption())
-                .orElseThrow(() -> new RuntimeException("Option not found"));
-        Module module = moduleRepository.findById(examDTO.getModule())
-                .orElseThrow(() -> new RuntimeException("Module not found"));
-
-        // Fetch locaux and assign them to the exam
-        List<Local> locaux = localService.getLocauxByIds(examDTO.getLocauxIds());
-
-        // Create and save the exam
-        Exam exam = new Exam();
-        exam.setDate(examDTO.getDate());
-        exam.setStartTime(examDTO.getStartTime());
-        exam.setEndTime(examDTO.getEndTime());
-        exam.setDepartement(departement);
-        exam.setEnseignant(enseignant);
-        exam.setOption(option);
-        exam.setModule(module);
-        exam.setLocaux(locaux);
-        for (Local local : locaux) {
-            local.setExam(exam);
-            local.setDisponible(false);
-        }
-
-        Exam savedExam = examService.createExam(exam);
-        return ResponseEntity.ok(savedExam);
+        Exam exam = examService.createExam(examDTO);
+        return ResponseEntity.ok(exam);
     }
+
+    @Autowired
+    private SurveillanceService surveillanceService;
 
     @GetMapping("/search")
     public ResponseEntity<List<Exam>> getExamsByDateAndTime(
@@ -92,24 +67,6 @@ public class ExamController {
     @GetMapping
     public ResponseEntity<List<Exam>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
-    }
-
-
-    @GetMapping("/generate-surveillance")
-    public ResponseEntity<Map<String, Map<String, String>>> generateSurveillanceTable() {
-        Map<String, Map<String, String>> surveillanceTable = surveillanceService.generateSurveillanceTable();
-        return ResponseEntity.ok(surveillanceTable);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Exam> updateExam(@PathVariable Long id, @RequestBody ExamDTO examDTO) {
-        return null;
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExam(@PathVariable Long id) {
-        examService.deleteExam(id);
-        return ResponseEntity.noContent().build();
     }
 
 }
