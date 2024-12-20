@@ -88,17 +88,9 @@ public class ExamController {
         return ResponseEntity.ok(exams);
     }
 
-
     @GetMapping
     public ResponseEntity<List<Exam>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
-    }
-
-
-    @GetMapping("/generate-surveillance")
-    public ResponseEntity<Map<String, Map<String, String>>> generateSurveillanceTable() {
-        Map<String, Map<String, String>> surveillanceTable = surveillanceService.generateSurveillanceTable();
-        return ResponseEntity.ok(surveillanceTable);
     }
 
     @PutMapping("/{id}")

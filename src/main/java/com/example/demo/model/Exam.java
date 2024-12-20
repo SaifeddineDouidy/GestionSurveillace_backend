@@ -45,6 +45,10 @@ public class Exam {
     @JsonManagedReference
     private List<Local> locaux;
 
+    @ManyToOne
+    @JoinColumn(name = "session_id", nullable = false)
+    private Session session;
+
     @PreRemove
     private void preRemove() {
 

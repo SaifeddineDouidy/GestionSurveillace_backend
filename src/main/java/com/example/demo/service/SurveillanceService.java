@@ -1,13 +1,15 @@
 package com.example.demo.service;
+
 import com.example.demo.model.Enseignant;
-import com.example.demo.model.*;
+import com.example.demo.model.Exam;
+import com.example.demo.model.Local;
+import com.example.demo.model.Session;
 import com.example.demo.repository.EnseignantRepository;
 import com.example.demo.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +26,14 @@ public class SurveillanceService {
     @Autowired
     private ExamService examService;
 
-    public Map<String, Map<String, String>> generateSurveillanceTable() {
-        List<Exam> exams = examService.getAllExams();
+    @Autowired
+    private SessionRepository sessionRepository;
+
+    public Map<String, Map<String, String>> generateSurveillanceTable(Long sessionId) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+
+        List<Exam> exams = examService.findBySessionId(sessionId);
         List<Enseignant> enseignants = enseignantService.getAllEnseignants();
         Map<String, Integer> professorAssignments = new HashMap<>();
         Map<String, Map<String, String>> surveillanceTable = new HashMap<>();
@@ -42,7 +50,9 @@ public class SurveillanceService {
             assignSurveillants(surveillanceTable, professorAssignments, exam);
         }
 
-        assignReservists(surveillanceTable, enseignants, professorAssignments);
+        // Assign reservists based on session
+        assignReservists(surveillanceTable, enseignants, professorAssignments, session);
+
         return surveillanceTable;
     }
 
@@ -74,18 +84,42 @@ public class SurveillanceService {
     }
 
     private void assignReservists(Map<String, Map<String, String>> table, List<Enseignant> enseignants,
-                                  Map<String, Integer> assignments) {
-        for (String session : getSessionSlots()) {
-            int reservistCount = 0;
+                                  Map<String, Integer> assignments, Session session) {
+        LocalDate currentDate = session.getStartDate();
 
-            for (Enseignant enseignant : enseignants) {
-                if (reservistCount >= 10) break;
-                if (assignments.getOrDefault(enseignant.getName(), 0) >= 1) continue;
+        // Iterate over each day in the session
+        while (!currentDate.isAfter(session.getEndDate())) {
+            // Morning session (from morning_start1 to morning_end2)
+            assignReservistsForHalfDay(
+                    table, enseignants, assignments, currentDate,
+                    session.getMorningStart1() + "-" + session.getMorningEnd2(), "Morning"
+            );
 
-                table.get(enseignant.getName()).put(session, "RR");
-                assignments.put(enseignant.getName(), assignments.getOrDefault(enseignant.getName(), 0) + 1);
-                reservistCount++;
-            }
+            // Afternoon session (from afternoon_start1 to afternoon_end2)
+            assignReservistsForHalfDay(
+                    table, enseignants, assignments, currentDate,
+                    session.getAfternoonStart1() + "-" + session.getAfternoonEnd2(), "Afternoon"
+            );
+
+            // Move to the next day
+            currentDate = currentDate.plusDays(1);
+        }
+    }
+
+    private void assignReservistsForHalfDay(Map<String, Map<String, String>> table, List<Enseignant> enseignants,
+                                            Map<String, Integer> assignments, LocalDate date, String timeRange, String halfDay) {
+        int reservistCount = 0;
+
+        for (Enseignant enseignant : enseignants) {
+            if (reservistCount >= 10) break; // Stop after assigning 10 reservists
+
+            String sessionKey = date + " " + halfDay + " (" + timeRange + ")"; // E.g., "2024-12-21 Morning (08:00-12:30)"
+            if (assignments.getOrDefault(enseignant.getName(), 0) >= 1) continue; // Skip if already assigned to a session
+
+            // Assign reservist
+            table.get(enseignant.getName()).put(sessionKey, "RR");
+            assignments.put(enseignant.getName(), assignments.getOrDefault(enseignant.getName(), 0) + 1);
+            reservistCount++;
         }
     }
 
@@ -98,9 +132,4 @@ public class SurveillanceService {
     private String getSessionKey(Exam exam) {
         return exam.getDate() + " " + exam.getStartTime() + "-" + exam.getEndTime();
     }
-
-    private List<String> getSessionSlots() {
-        return Arrays.asList("Morning1", "Morning2", "Afternoon1", "Afternoon2");
-    }
 }
-

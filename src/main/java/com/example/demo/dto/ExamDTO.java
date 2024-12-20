@@ -18,5 +18,7 @@ public class ExamDTO {
     private Long option;
     private Long module;
     private List<Long> locauxIds; // IDs of locaux to associate
+    private Long sessionId; // ID of the session
+
 
 }
