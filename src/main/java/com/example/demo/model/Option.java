@@ -25,7 +25,7 @@ public class Option {
     private String annee;
     private int nbrInscrit;
 
-    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "option", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonManagedReference
     private List<Module> modules;
     @ManyToOne

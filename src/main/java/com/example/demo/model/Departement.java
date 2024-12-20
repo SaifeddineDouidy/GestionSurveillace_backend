@@ -20,6 +20,7 @@ public class Departement {
 
     @Column(name = "departement_name", nullable = false)
     private String departmentName;
+
     @OneToMany(mappedBy = "departement", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Option> options;
@@ -28,6 +29,4 @@ public class Departement {
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Enseignant> enseignants = new ArrayList<>();
-
-
 }

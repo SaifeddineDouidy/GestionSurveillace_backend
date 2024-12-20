@@ -22,7 +22,7 @@ public class Module {
 
     private String nomModule;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "option_id")
     @JsonBackReference
     private Option option;
