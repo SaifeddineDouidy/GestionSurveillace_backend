@@ -39,6 +39,10 @@ public class LocalService {
         return localRepository.save(local);
     }
 
+    public List<Local> getAvailableLocaux() {
+        return localRepository.findByDisponibleTrue();
+    }
+
     public List<Local> searchLocaux(String query) {
         return localRepository.findAll().stream()
                 .filter(local -> local.getNom().toLowerCase().contains(query.toLowerCase())

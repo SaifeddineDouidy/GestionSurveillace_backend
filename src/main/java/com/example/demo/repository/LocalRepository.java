@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface LocalRepository extends JpaRepository<Local, Long> {
     List<Local> findAllByIdIn(List<Long> ids);
+    List<Local> findByDisponibleTrue();
 }

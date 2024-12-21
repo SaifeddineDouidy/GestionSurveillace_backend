@@ -23,8 +23,16 @@ public class LocalController {
     private LocalService localService;
 
     // Get all locaux
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Local>> getAllLocaux() {
+        return ResponseEntity.ok(localService.getAllLocaux());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Local>> getAvailableLocaux(@RequestParam(value = "disponible", required = false) Boolean disponible) {
+        if (disponible != null && disponible) {
+            return ResponseEntity.ok(localService.getAvailableLocaux());
+        }
         return ResponseEntity.ok(localService.getAllLocaux());
     }
 
@@ -34,6 +42,7 @@ public class LocalController {
         Local createdLocal = localService.addLocal(local);
         return ResponseEntity.ok(createdLocal);
     }
+
 
     // Update an existing local
     @PutMapping("/{id}")
