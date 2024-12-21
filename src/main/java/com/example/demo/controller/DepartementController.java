@@ -62,12 +62,11 @@ public class DepartementController {
     @PutMapping("/{id}")
     public ResponseEntity<Departement> updateDepartement(@PathVariable Long id, @RequestBody Departement departementDetails) {
         return departementService.getDepartementById(id).map(departement -> {
-            // Update the department name
+
             if (departementDetails.getDepartmentName() != null) {
                 departement.setDepartmentName(departementDetails.getDepartmentName());
             }
 
-                // Update the parent reference in enseignants
                 for (Enseignant enseignant : departement.getEnseignants()) {
                     enseignant.setDepartment(departement);
                 }
