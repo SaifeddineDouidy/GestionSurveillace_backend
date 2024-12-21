@@ -33,7 +33,30 @@ public class ExamService {
     @Autowired
     private OptionRepository optionRepository;
 
-    public Exam createExam(Exam exam) {
+    public Exam createExam(ExamDTO examDTO) {
+        // Fetch the session
+        Session session = sessionRepository.findById(examDTO.getSessionId())
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+
+        // Fetch related entities
+        Exam exam = new Exam();
+        exam.setDate(examDTO.getDate());
+        exam.setStartTime(examDTO.getStartTime());
+        exam.setEndTime(examDTO.getEndTime());
+        exam.setDepartement(departementRepository.findById(examDTO.getDepartement()).orElseThrow());
+        exam.setEnseignant(enseignantRepository.findById(examDTO.getEnseignant()).orElseThrow());
+        exam.setOption(optionRepository.findById(examDTO.getOption()).orElseThrow());
+        exam.setModule(moduleRepository.findById(examDTO.getModule()).orElseThrow());
+        exam.setSession(session); // Link the exam to the session
+
+        // Fetch and associate locaux
+        List<Local> locaux = localService.getLocauxByIds(examDTO.getLocauxIds());
+        exam.setLocaux(locaux);
+        for (Local local : locaux) {
+            local.setExam(exam); // Link the local to the exam
+            local.setDisponible(false); // Mark the local as unavailable
+        }
+
         return examRepository.save(exam);
     }
 
@@ -73,32 +96,7 @@ public class ExamService {
                 .collect(Collectors.toList());
     }
 
-    public Exam createExam(ExamDTO examDTO) {
-        // Fetch the session
-        Session session = sessionRepository.findById(examDTO.getSessionId())
-                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
 
-        // Fetch related entities
-        Exam exam = new Exam();
-        exam.setDate(examDTO.getDate());
-        exam.setStartTime(examDTO.getStartTime());
-        exam.setEndTime(examDTO.getEndTime());
-        exam.setDepartement(departementRepository.findById(examDTO.getDepartement()).orElseThrow());
-        exam.setEnseignant(enseignantRepository.findById(examDTO.getEnseignant()).orElseThrow());
-        exam.setOption(optionRepository.findById(examDTO.getOption()).orElseThrow());
-        exam.setModule(moduleRepository.findById(examDTO.getModule()).orElseThrow());
-        exam.setSession(session); // Link the exam to the session
-
-        // Fetch and associate locaux
-        List<Local> locaux = localService.getLocauxByIds(examDTO.getLocauxIds());
-        exam.setLocaux(locaux);
-        for (Local local : locaux) {
-            local.setExam(exam); // Link the local to the exam
-            local.setDisponible(false); // Mark the local as unavailable
-        }
-
-        return examRepository.save(exam);
-    }
 
     private void collect(Collector<Object,?, List<Object>> list) {
     }

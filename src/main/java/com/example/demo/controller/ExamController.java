@@ -46,36 +46,8 @@ public class ExamController {
 
     @PostMapping
     public ResponseEntity<Exam> createExam(@RequestBody ExamDTO examDTO) {
-        // Fetch related entities
-        Departement departement = departementRepository.findById(examDTO.getDepartement())
-                .orElseThrow(() -> new RuntimeException("Departement not found"));
-        Enseignant enseignant = enseignantRepository.findById(examDTO.getEnseignant())
-                .orElseThrow(() -> new RuntimeException("Enseignant not found"));
-        Option option = optionRepository.findById(examDTO.getOption())
-                .orElseThrow(() -> new RuntimeException("Option not found"));
-        Module module = moduleRepository.findById(examDTO.getModule())
-                .orElseThrow(() -> new RuntimeException("Module not found"));
-
-        // Fetch locaux and assign them to the exam
-        List<Local> locaux = localService.getLocauxByIds(examDTO.getLocauxIds());
-
-        // Create and save the exam
-        Exam exam = new Exam();
-        exam.setDate(examDTO.getDate());
-        exam.setStartTime(examDTO.getStartTime());
-        exam.setEndTime(examDTO.getEndTime());
-        exam.setDepartement(departement);
-        exam.setEnseignant(enseignant);
-        exam.setOption(option);
-        exam.setModule(module);
-        exam.setLocaux(locaux);
-        for (Local local : locaux) {
-            local.setExam(exam);
-            local.setDisponible(false);
-        }
-
-        Exam savedExam = examService.createExam(exam);
-        return ResponseEntity.ok(savedExam);
+        Exam exam = examService.createExam(examDTO);
+        return ResponseEntity.ok(exam);
     }
 
     @GetMapping("/search")
