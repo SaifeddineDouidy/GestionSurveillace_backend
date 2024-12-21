@@ -112,7 +112,7 @@ public class OptionController {
         }
 
         String fileExtension = getFileExtension(file.getOriginalFilename());
-        if (!fileExtension.equals("xlsx") && !fileExtension.equals("xls")) {
+        if (!fileExtension.equals("xlsx") && !fileExtension.equals("xls") && !fileExtension.equals("csv")) {
             return ResponseEntity.badRequest().body("Please upload an Excel file");
         }
 
