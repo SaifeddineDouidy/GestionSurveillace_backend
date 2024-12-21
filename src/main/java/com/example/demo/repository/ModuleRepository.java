@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ModuleRepository  extends JpaRepository<Module, Long> {
     List<Module> findByOptionId(Long optionId);
+    boolean existsByNomModuleAndOption(String nomModule, Option option);
+
 }

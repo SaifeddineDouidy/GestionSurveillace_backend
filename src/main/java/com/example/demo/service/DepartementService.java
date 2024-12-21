@@ -65,4 +65,9 @@ public class DepartementService {
     }
 
 
+
+
+    public Optional<Departement> findByDepartmentName(String name) {
+        return departementRepository.findByDepartmentName(name);
+    }
 }

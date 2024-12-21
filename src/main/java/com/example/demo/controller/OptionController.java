@@ -7,12 +7,17 @@ import com.example.demo.model.Option;
 import com.example.demo.service.DepartementService;
 import com.example.demo.service.ModuleService;
 import com.example.demo.service.OptionService;
+import com.example.demo.service.OptionsModuleFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,6 +28,9 @@ public class OptionController {
     private OptionService optionService;
     @Autowired
     private ModuleService moduleService;
+
+    @Autowired
+    private OptionsModuleFileService excelUploadService;
 
     @Autowired
     private DepartementService departementService;
@@ -95,6 +103,33 @@ public class OptionController {
     public ResponseEntity<List<Module>> getModulesByOption(@PathVariable Long id) {
         List<Module> modules = moduleService.getModulesByOption(id);
         return ResponseEntity.ok(modules);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Please select a file to upload");
+        }
+
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        if (!fileExtension.equals("xlsx") && !fileExtension.equals("xls")) {
+            return ResponseEntity.badRequest().body("Please upload an Excel file");
+        }
+
+        try {
+            Map<String, Object> result = excelUploadService.processExcelFile(file);
+            return ResponseEntity.ok(result);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to process file: " + e.getMessage());
+        }
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null) return "";
+        int lastDot = filename.lastIndexOf('.');
+        if (lastDot == -1) return "";
+        return filename.substring(lastDot + 1).toLowerCase();
     }
 
 }

@@ -48,6 +48,8 @@ public class OptionService {
     public List<Option> getOptionsByDepartment(Long departmentId) {
         return optionRepository.findByDepartementId(departmentId);
     }
-
+    public Option findByNomDeFiliereAndDepartement(String nomDeFiliere, Departement departement) {
+        return optionRepository.findByNomDeFiliereAndDepartement(nomDeFiliere,departement);
+    }
 
 }
