@@ -59,4 +59,9 @@ public class DepartementService {
                 .map(dept -> dept.getEnseignants().size())
                 .collect(Collectors.toList());
     }
+
+
+    public Optional<Departement> findByDepartmentName(String name) {
+        return departementRepository.findByDepartmentName(name);
+    }
 }

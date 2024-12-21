@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.model.Option;
 import com.example.demo.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,12 @@ public class ModuleService {
                 .collect(Collectors.toList());
     }
 
+
     public List<Module> getModulesByOption(Long optionId) {
         return moduleRepository.findByOptionId(optionId);
+    }
+
+    public boolean existsByNomModuleAndOption(String nomModule, com.example.demo.model.Option option) {
+        return moduleRepository.existsByNomModuleAndOption(nomModule, option);
     }
 }

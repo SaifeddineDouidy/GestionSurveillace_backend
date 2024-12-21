@@ -36,6 +36,14 @@ public class SessionService {
         existingSession.setType(session.getType());
         existingSession.setStartDate(session.getStartDate());
         existingSession.setEndDate(session.getEndDate());
+        existingSession.setMorningStart1(session.getMorningStart1());
+        existingSession.setMorningStart2(session.getMorningStart2());
+        existingSession.setMorningEnd1(session.getMorningEnd1());
+        existingSession.setMorningEnd2(session.getMorningEnd2());
+        existingSession.setAfternoonStart1(session.getAfternoonStart1());
+        existingSession.setAfternoonStart2(session.getAfternoonStart2());
+        existingSession.setAfternoonEnd1(session.getAfternoonEnd1());
+        existingSession.setAfternoonEnd2(session.getAfternoonEnd2());
         sessionRepository.save(existingSession);
     }
 }
