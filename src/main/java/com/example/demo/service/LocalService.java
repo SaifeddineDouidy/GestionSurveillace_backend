@@ -50,4 +50,9 @@ public class LocalService {
         localRepository.saveAll(locaux);
     }
 
+    public List<Local> getAvailableLocaux() {
+        return localRepository.findByDisponibleTrue();
+    }
+
+
 }

@@ -17,6 +17,7 @@ public class ExamDTO {
     private Long enseignant;
     private Long option;
     private Long module;
-    private List<Long> locauxIds; // IDs of locaux to associate
+    private List<Long> locauxIds;
+    private int remainingCapacity;
 
 }

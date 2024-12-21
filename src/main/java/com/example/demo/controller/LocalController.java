@@ -24,9 +24,13 @@ public class LocalController {
 
     // Get all locaux
     @GetMapping
-    public ResponseEntity<List<Local>> getAllLocaux() {
+    public ResponseEntity<List<Local>> getAvailableLocaux(@RequestParam(value = "disponible", required = false) Boolean disponible) {
+        if (disponible != null && disponible) {
+            return ResponseEntity.ok(localService.getAvailableLocaux());
+        }
         return ResponseEntity.ok(localService.getAllLocaux());
     }
+
 
     // Add a new local
     @PostMapping

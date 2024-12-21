@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class ExamService {
@@ -37,4 +38,13 @@ public class ExamService {
     public List<Exam> findExamsByDateAndTime(LocalDate date, LocalTime startTime, LocalTime endTime) {
         return examRepository.findByDateAndStartTimeAndEndTime(date, startTime, endTime);
     }
+
+    public void deleteExam(Long id) {
+        examRepository.deleteById(id);
+    }
+
+    public Optional<Exam> getExamById(Long id) {
+        return examRepository.findById(id);
+    }
+
 }

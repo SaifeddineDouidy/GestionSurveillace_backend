@@ -41,7 +41,6 @@ public class ExamController {
 
     @PostMapping
     public ResponseEntity<Exam> createExam(@RequestBody ExamDTO examDTO) {
-        // Fetch related entities
         Departement departement = departementRepository.findById(examDTO.getDepartement())
                 .orElseThrow(() -> new RuntimeException("Departement not found"));
         Enseignant enseignant = enseignantRepository.findById(examDTO.getEnseignant())
@@ -51,10 +50,8 @@ public class ExamController {
         Module module = moduleRepository.findById(examDTO.getModule())
                 .orElseThrow(() -> new RuntimeException("Module not found"));
 
-        // Fetch locaux and assign them to the exam
         List<Local> locaux = localService.getLocauxByIds(examDTO.getLocauxIds());
 
-        // Create and save the exam
         Exam exam = new Exam();
         exam.setDate(examDTO.getDate());
         exam.setStartTime(examDTO.getStartTime());
@@ -64,11 +61,25 @@ public class ExamController {
         exam.setOption(option);
         exam.setModule(module);
         exam.setLocaux(locaux);
-        for (Local local : locaux) {
+
+        int remainingCapacity = examDTO.getRemainingCapacity();
+        for (int i = 0; i < locaux.size(); i++) {
+            Local local = locaux.get(i);
             local.setExam(exam);
-            local.setDisponible(false);
+
+            if (i == locaux.size() - 1) {
+                local.setTaille(remainingCapacity);
+                if (remainingCapacity > 10) {
+                    local.setDisponible(true);
+                } else {
+                    local.setDisponible(false);
+                }
+            } else {
+                local.setDisponible(false);
+            }
         }
 
+        // Save the exam
         Exam savedExam = examService.createExam(exam);
         return ResponseEntity.ok(savedExam);
     }
@@ -87,6 +98,15 @@ public class ExamController {
     @GetMapping
     public ResponseEntity<List<Exam>> getAllExams() {
         return ResponseEntity.ok(examService.getAllExams());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEnseignant(@PathVariable Long id) {
+        if (examService.getExamById(id).isPresent()) {
+            examService.deleteExam(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }
