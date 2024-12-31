@@ -111,17 +111,17 @@ public class SurveillanceService {
         int reservistCount = 0;
 
         for (Enseignant enseignant : enseignants) {
-            if (reservistCount >= 10) break; // Stop after assigning 10 reservists
-
-            String sessionKey = date + " " + halfDay + " (" + timeRange + ")"; // E.g., "2024-12-21 Morning (08:00-12:30)"
+            if (reservistCount >= 10) break;
+            if (enseignant.isDispense()) continue;
             if (assignments.getOrDefault(enseignant.getName(), 0) >= 1) continue; // Skip if already assigned to a session
 
-            // Assign reservist
+            String sessionKey = date + " " + halfDay + " (" + timeRange + ")"; // E.g., "2024-12-21 Morning (08:00-12:30)"
             table.get(enseignant.getName()).put(sessionKey, "RR");
             assignments.put(enseignant.getName(), assignments.getOrDefault(enseignant.getName(), 0) + 1);
             reservistCount++;
         }
     }
+
 
     private int calculateRequiredSurveillants(int roomCapacity) {
         if (roomCapacity >= 80) return 4;
