@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Holiday;
 import com.example.demo.model.Session;
+import com.example.demo.service.HolidayService;
 import com.example.demo.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +20,9 @@ public class SessionController {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private HolidayService holidayService;
 
     @PostMapping
     public ResponseEntity<Session> createSession(@RequestBody Session session) {
@@ -98,5 +104,22 @@ public class SessionController {
 
         return ResponseEntity.ok(schedule);
     }
+
+    @GetMapping("/holidays")
+    public ResponseEntity<List<Holiday>> getAllHolidays() {
+        List<Holiday> holidays = holidayService.getAllHolidays();
+        return ResponseEntity.ok(holidays);
+    }
+
+    @GetMapping("/holidays/range")
+    public ResponseEntity<List<Holiday>> getHolidaysInRange(
+            @RequestParam("start") String startDate,
+            @RequestParam("end") String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        List<Holiday> holidays = holidayService.getHolidaysInRange(start, end);
+        return ResponseEntity.ok(holidays);
+    }
+
 
 }

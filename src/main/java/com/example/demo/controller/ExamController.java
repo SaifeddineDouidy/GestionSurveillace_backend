@@ -76,4 +76,9 @@ public class ExamController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/session/{sessionId}")
+    public ResponseEntity<List<Exam>> getExamsBySession(@PathVariable Long sessionId) {
+        List<Exam> exams = examService.findBySessionId(sessionId);
+        return ResponseEntity.ok(exams);
+    }
 }

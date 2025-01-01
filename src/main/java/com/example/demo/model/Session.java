@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -67,5 +69,17 @@ public class Session {
     @Column(name = "afternoon_end2", nullable = false)
 
     private String afternoonEnd2;
+
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Exam> exams;
+
+    @PreRemove
+    private void preRemove() {
+        for (Exam exam : exams) {
+            exam.setSession(null);
+        }
+        exams.clear();
+    }
 }
 
