@@ -122,6 +122,7 @@ public class SurveillanceService {
         }
     }
 
+
     private int calculateRequiredSurveillants(int roomCapacity) {
         if (roomCapacity >= 80) return 4;
         if (roomCapacity >= 65) return 3;

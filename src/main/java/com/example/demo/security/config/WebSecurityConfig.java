@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .antMatchers("/api/v1/login",
                         "/api/locaux/**",
                         "/api/session/**",
+                        "/api/occupations/**",
                         "/api/options/**",
                         "/api/modules/**",
                         "/api/departements/**",
@@ -47,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                         "/forgotPassword/**"
                         , "/api/surveillance/**",
                         "/changePassword/**",
+                        "/api/v1/user/**",
                         "/webjars/**" ) // Allow public access to these endpoints
                 .permitAll()
                 .anyRequest()
