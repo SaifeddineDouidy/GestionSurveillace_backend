@@ -35,4 +35,8 @@ public class EnseignantService {
     public List<Enseignant> saveAll(List<Enseignant> enseignants) {
         return enseignantRepository.saveAll(enseignants);
     }
+    public Enseignant getEnseignantByName(String name) {
+        return enseignantRepository.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("Enseignant not found with name: " + name));
+    }
 }

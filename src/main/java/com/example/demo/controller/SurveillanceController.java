@@ -15,8 +15,8 @@ public class SurveillanceController {
     private SurveillanceService surveillanceService;
 
     @GetMapping("/generate")
-    public ResponseEntity<Map<String, Map<String, String>>> generateSurveillanceTable(@RequestParam Long sessionId) {
-        Map<String, Map<String, String>> surveillanceTable = surveillanceService.generateSurveillanceTable(sessionId);
+    public ResponseEntity<Map<Long, Map<String, String>>> generateSurveillanceTable(@RequestParam Long sessionId) {
+        Map<Long, Map<String, String>> surveillanceTable = surveillanceService.generateSurveillanceTable(sessionId);
         return ResponseEntity.ok(surveillanceTable);
     }
 }
