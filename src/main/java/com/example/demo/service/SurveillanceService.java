@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,9 @@ public class SurveillanceService {
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private OccupationService occupationService; // Added to fetch occupations
 
     public Map<String, Map<String, String>> generateSurveillanceTable(Long sessionId) {
         Session session = sessionRepository.findById(sessionId)
@@ -58,8 +62,11 @@ public class SurveillanceService {
 
     private void assignTournant(Map<String, Map<String, String>> table, Map<String, Integer> assignments, Exam exam) {
         Enseignant tournant = exam.getEnseignant();
-        table.get(tournant.getName()).put(getSessionKey(exam), "TT");
-        assignments.put(tournant.getName(), assignments.getOrDefault(tournant.getName(), 0) + 1);
+
+        if (!hasConflict(tournant, exam.getDate(), exam.getStartTime(), exam.getEndTime())) {
+            table.get(tournant.getName()).put(getSessionKey(exam), "TT");
+            assignments.put(tournant.getName(), assignments.getOrDefault(tournant.getName(), 0) + 1);
+        }
     }
 
     private void assignSurveillants(Map<String, Map<String, String>> table, Map<String, Integer> assignments, Exam exam) {
@@ -77,9 +84,13 @@ public class SurveillanceService {
             if (assignedCount >= requiredSurveillants) break;
             if (assignments.getOrDefault(professorName, 0) >= 1) continue; // Max 1 session per day
 
-            table.get(professorName).put(getSessionKey(exam), local.getNom());
-            assignments.put(professorName, assignments.getOrDefault(professorName, 0) + 1);
-            assignedCount++;
+            Enseignant enseignant = enseignantService.getEnseignantByName(professorName);
+
+            if (!hasConflict(enseignant, exam.getDate(), exam.getStartTime(), exam.getEndTime())) {
+                table.get(professorName).put(getSessionKey(exam), local.getNom());
+                assignments.put(professorName, assignments.getOrDefault(professorName, 0) + 1);
+                assignedCount++;
+            }
         }
     }
 
@@ -115,11 +126,26 @@ public class SurveillanceService {
             if (enseignant.isDispense()) continue;
             if (assignments.getOrDefault(enseignant.getName(), 0) >= 1) continue; // Skip if already assigned to a session
 
-            String sessionKey = date + " " + halfDay + " (" + timeRange + ")"; // E.g., "2024-12-21 Morning (08:00-12:30)"
-            table.get(enseignant.getName()).put(sessionKey, "RR");
-            assignments.put(enseignant.getName(), assignments.getOrDefault(enseignant.getName(), 0) + 1);
-            reservistCount++;
+            String[] times = timeRange.split("-");
+            LocalTime startTime = LocalTime.parse(times[0]);
+            LocalTime endTime = LocalTime.parse(times[1]);
+
+            if (!hasConflict(enseignant, date, startTime, endTime)) {
+                String sessionKey = date + " " + halfDay + " (" + timeRange + ")"; // E.g., "2024-12-21 Morning (08:00-12:30)"
+                table.get(enseignant.getName()).put(sessionKey, "RR");
+                assignments.put(enseignant.getName(), assignments.getOrDefault(enseignant.getName(), 0) + 1);
+                reservistCount++;
+            }
         }
+    }
+
+    private boolean hasConflict(Enseignant enseignant, LocalDate date, LocalTime startTime, LocalTime endTime) {
+
+        return occupationService.getOccupationsByEnseignantAndDate(enseignant.getId(), date).stream()
+                .anyMatch(occupation ->
+                        !(occupation.getEndTime().isBefore(startTime) || occupation.getStartTime().isAfter(endTime))
+                );
+
     }
 
 
